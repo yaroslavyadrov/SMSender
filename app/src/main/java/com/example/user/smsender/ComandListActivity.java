@@ -1,23 +1,46 @@
 package com.example.user.smsender;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.user.smsender.models.Komanda;
+
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity
 public class ComandListActivity extends ActionBarActivity {
-    @ViewById TextView textView;
+
+    @ViewById(R.id.textView)
+    TextView textView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comand_list_activity);
-        textView.setText("sdfgsdfgsdf");
+
+
+
+        //TextView tv = (TextView) findViewById (R.id.textView);
+
+        Komanda kom = new Komanda();
+        kom.id = 111;
+        kom.last_date = "date";
+        kom.text = "textsms";
+        kom.nomer_tel = "8937";
+        kom.name = "name";
+        DBHelper dbh = new DBHelper(this);
+        dbh.addComand(kom);
+        Komanda kom1 = dbh.getComand(1);
+
+
+        //textView.setText(kom1.text);
 
     }
 
