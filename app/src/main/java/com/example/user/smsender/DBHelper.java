@@ -9,7 +9,10 @@ import android.util.Log;
 
 import com.example.user.smsender.models.Komanda;
 
+import org.androidannotations.annotations.Background;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by user on 25.01.15.
@@ -17,7 +20,7 @@ import java.io.IOException;
 
  public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_ID = "id";
-    public static final String KEY_COMID = "comID";
+    //public static final String KEY_COMID = "comID";
     public static final String KEY_NOMER = "nomertel";
     public static final String KEY_NAME = "name";
     public static final String KEY_TEXT = "textsms";
@@ -42,7 +45,6 @@ import java.io.IOException;
             // создаем таблицу с полями
             db.execSQL("create table " + DATABASE_TABLE + "("
                     + KEY_ID + " integer primary key autoincrement,"
-                    + KEY_COMID + " text,"
                     + KEY_NOMER + " text,"
                     + KEY_NAME + " text,"
                     + KEY_TEXT + " text,"
@@ -54,26 +56,26 @@ import java.io.IOException;
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
-
+        @Background
         public void addComand (Komanda kom){
             ContentValues cv = new ContentValues();
             // подготовим данные для вставки в виде пар: наименование столбца - значение
 
-            cv.put(KEY_COMID, kom.id);
+            //cv.put(KEY_COMID, kom.id);
             cv.put(KEY_NOMER, kom.nomer_tel);
             cv.put(KEY_NAME, kom.name);
             cv.put(KEY_TEXT, kom.text);
             cv.put(KEY_DATE, kom.last_date);
             // вставляем запись и получаем ее ID
-            long rowID = dbs.insert("tableComands", null, cv);
+            long rowID = dbs.insert(DATABASE_TABLE, null, cv);
             Log.d("My_Logs", "row inserted, ID = " + rowID);
             //dbs.close();
         }
 
-
+    @Background
     public Komanda getComand(int id){
             Komanda komanda = new Komanda();
-            String request = "SELECT * FROM " + DATABASE_TABLE +" WHERE " + KEY_COMID + " LIKE '" + id + "'";
+            String request = "SELECT * FROM " + DATABASE_TABLE +" WHERE " + KEY_ID + " LIKE '" + id + "'";
             //Cursor c = dbs.query(DATABASE_TABLE, new String[] {KEY_COMID, KEY_NOMER, KEY_NAME, KEY_TEXT, KEY_DATE}, id + "=?", new String[] {String.valueOf(id)}, null, null, null, null );
             Cursor c = dbs.rawQuery(request, null);
             if (c != null){
@@ -81,11 +83,11 @@ import java.io.IOException;
                 try {
                     if (c.getString(1) != null){
                         //(Integer.parseInt(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), c.getString(4));
-                        komanda.id = Integer.parseInt(c.getString(1));
-                        komanda.nomer_tel = c.getString(2);
-                        komanda.name = c.getString(3);
-                        komanda.text = c.getString(4);
-                        komanda.last_date = c.getString(5);
+                        komanda.id = Integer.parseInt(c.getString(0));
+                        komanda.nomer_tel = c.getString(1);
+                        komanda.name = c.getString(2);
+                        komanda.text = c.getString(3);
+                        komanda.last_date = c.getString(4);
                     }
                 } catch (Exception e) {
                     komanda = null;
@@ -96,13 +98,43 @@ import java.io.IOException;
             c.close();
             return komanda;
     }
-
+    @Background
     public void delComand (int id){
-        dbs.delete(DATABASE_TABLE, KEY_COMID + "=" + id,null);
+        dbs.delete(DATABASE_TABLE, KEY_ID + "=" + id,null);
 
     }
+    @Background
+    public void updateComand (Komanda kom){
 
-    public void updateComand (Ko)
+        dbs.delete(DATABASE_TABLE, KEY_ID + "=" + kom.id,null);
+        ContentValues cv = new ContentValues();
+        // подготовим данные для вставки в виде пар: наименование столбца - значение
+        cv.put(KEY_NOMER, kom.nomer_tel);
+        cv.put(KEY_NAME, kom.name);
+        cv.put(KEY_TEXT, kom.text);
+        cv.put(KEY_DATE, kom.last_date);
+        // вставляем запись и получаем ее ID
+        long rowID = dbs.insert(DATABASE_TABLE, null, cv);
+        Log.d("My_Logs", "row inserted, ID = " + rowID);
+
+    }
+    @Background
+    public ArrayList<Komanda> getallComands (){
+        ArrayList <Komanda> listofComands = new ArrayList<>();
+        Cursor c = dbs.query(DATABASE_TABLE, null, null, null, null, null, null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Komanda komanda = new Komanda();
+            komanda.id = Integer.parseInt(c.getString(0));
+            komanda.nomer_tel = c.getString(1);
+            komanda.name = c.getString(2);
+            komanda.text = c.getString(3);
+            komanda.last_date = c.getString(4);
+            listofComands.add(komanda);
+            c.moveToNext();
+        }
+        return listofComands;
+    }
 
 
 

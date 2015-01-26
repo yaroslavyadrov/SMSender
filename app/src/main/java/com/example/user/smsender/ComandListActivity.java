@@ -37,10 +37,14 @@ public class ComandListActivity extends ActionBarActivity {
         kom.name = "name";
         DBHelper dbh = new DBHelper(this);
         dbh.addComand(kom);
-        Komanda kom1 = dbh.getComand(222);
-        dbh.delComand(kom.id);
+        //textView.setText(kom.name);
+        //kom.name = "name1";
+        //dbh.updateComand(kom);
 
-        //textView.setText(kom1.text);
+        //Komanda kom1 = dbh.getComand(kom.id);
+        //dbh.delComand(kom.id);
+
+        //textView.setText(kom1.name);
 
     }
 
