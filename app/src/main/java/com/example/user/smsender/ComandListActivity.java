@@ -15,7 +15,7 @@ import org.androidannotations.annotations.ViewById;
 @EActivity
 public class ComandListActivity extends ActionBarActivity {
 
-    @ViewById(R.id.textView)
+    @ViewById
     TextView textView;
 
 
@@ -37,8 +37,8 @@ public class ComandListActivity extends ActionBarActivity {
         kom.name = "name";
         DBHelper dbh = new DBHelper(this);
         dbh.addComand(kom);
-        Komanda kom1 = dbh.getComand(1);
-
+        Komanda kom1 = dbh.getComand(222);
+        dbh.delComand(kom.id);
 
         //textView.setText(kom1.text);
 

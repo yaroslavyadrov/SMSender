@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.example.user.smsender.models.Komanda;
 
+import java.io.IOException;
+
 /**
  * Created by user on 25.01.15.
  */
@@ -69,24 +71,39 @@ import com.example.user.smsender.models.Komanda;
         }
 
 
-        public Komanda getComand(int id){
-            Cursor c = dbs.query("tableComands", new String[] {KEY_COMID, KEY_NOMER, KEY_NAME, KEY_TEXT, KEY_DATE}, id + "=?", new String[] {String.valueOf(id)}, null, null, null, null );
+    public Komanda getComand(int id){
+            Komanda komanda = new Komanda();
+            String request = "SELECT * FROM " + DATABASE_TABLE +" WHERE " + KEY_COMID + " LIKE '" + id + "'";
+            //Cursor c = dbs.query(DATABASE_TABLE, new String[] {KEY_COMID, KEY_NOMER, KEY_NAME, KEY_TEXT, KEY_DATE}, id + "=?", new String[] {String.valueOf(id)}, null, null, null, null );
+            Cursor c = dbs.rawQuery(request, null);
             if (c != null){
                 c.moveToFirst();
+                try {
+                    if (c.getString(1) != null){
+                        //(Integer.parseInt(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), c.getString(4));
+                        komanda.id = Integer.parseInt(c.getString(1));
+                        komanda.nomer_tel = c.getString(2);
+                        komanda.name = c.getString(3);
+                        komanda.text = c.getString(4);
+                        komanda.last_date = c.getString(5);
+                    }
+                } catch (Exception e) {
+                    komanda = null;
+                    Log.e("Test", e.getMessage(), e);
+                }
+
             }
-            Komanda komanda = new Komanda();//(Integer.parseInt(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), c.getString(4));
-            komanda.id = Integer.parseInt(c.getString(1));
-            komanda.nomer_tel = c.getString(1);
-            komanda.name = c.getString(2);
-            komanda.text = c.getString(3);
-            komanda.last_date = c.getString(4);
             c.close();
             return komanda;
-        }
+    }
 
-        //public void delComand (int id){
+    public void delComand (int id){
+        dbs.delete(DATABASE_TABLE, KEY_COMID + "=" + id,null);
 
-        //}
+    }
+
+    public void updateComand (Ko)
+
 
 
 
