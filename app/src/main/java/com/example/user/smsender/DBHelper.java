@@ -56,7 +56,6 @@ import java.util.ArrayList;
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
-        @Background
         public void addComand (Komanda kom){
             ContentValues cv = new ContentValues();
             // подготовим данные для вставки в виде пар: наименование столбца - значение
@@ -72,7 +71,6 @@ import java.util.ArrayList;
             //dbs.close();
         }
 
-    @Background
     public Komanda getComand(int id){
             Komanda komanda = new Komanda();
             String request = "SELECT * FROM " + DATABASE_TABLE +" WHERE " + KEY_ID + " LIKE '" + id + "'";
@@ -98,12 +96,10 @@ import java.util.ArrayList;
             c.close();
             return komanda;
     }
-    @Background
     public void delComand (int id){
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + id,null);
 
     }
-    @Background
     public void updateComand (Komanda kom){
 
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + kom.id,null);
@@ -118,7 +114,6 @@ import java.util.ArrayList;
         Log.d("My_Logs", "row inserted, ID = " + rowID);
 
     }
-    @Background
     public ArrayList<Komanda> getallComands (){
         ArrayList <Komanda> listofComands = new ArrayList<>();
         Cursor c = dbs.query(DATABASE_TABLE, null, null, null, null, null, null);

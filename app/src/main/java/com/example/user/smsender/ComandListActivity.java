@@ -15,8 +15,7 @@ import org.androidannotations.annotations.ViewById;
 @EActivity
 public class ComandListActivity extends ActionBarActivity {
 
-    @ViewById
-    TextView textView;
+
 
 
 
