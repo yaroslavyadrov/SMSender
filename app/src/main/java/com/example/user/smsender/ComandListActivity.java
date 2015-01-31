@@ -2,17 +2,15 @@ package com.example.user.smsender;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
 
@@ -26,14 +24,19 @@ import java.util.ArrayList;
 public class ComandListActivity extends ActionBarActivity {
     KomListAdapter komListAdapter;
     ArrayList<Komanda> komlist;
+    View footer;// = getLayoutInflater().inflate(R.layout.footer, null);
+    DialogFragment dialog;
+
+
+
 
     @ViewById
     ListView kom_list;
-    int posspisok;
 
     @ItemClick
        void kom_listItemClicked (Komanda selectedKomanda) {
-        posspisok = selectedKomanda.id;
+        MyApp myApp = ((MyApp) getApplicationContext());
+        myApp.currentpos = selectedKomanda.id;
         showDialog(0);
     }
     @Override
@@ -43,6 +46,18 @@ public class ComandListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_comand_list_activity);
         //DBHelper dbh = new DBHelper(this);
         MyApp myApp = ((MyApp) getApplicationContext());
+        footer = getLayoutInflater().inflate(R.layout.footer, null);
+        Button button_footer = (Button) footer.findViewById(R.id.button_footer);
+
+        button_footer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApp myApp = ((MyApp) getApplicationContext());
+                myApp.isupdate = false;
+                createupdatedial();
+            }
+        });
+
 
         //TextView tv = (TextView) findViewById (R.id.textView);
         //ListView kom_list = (ListView) findViewById(R.id.kom_list);
@@ -54,9 +69,7 @@ public class ComandListActivity extends ActionBarActivity {
         kom.nomer_tel = "8937";
         kom.name = "name";
         myApp.dbHelper.addComand(kom);
-        komListAdapter = new KomListAdapter(this);
-        kom_list.setAdapter(komListAdapter);
-
+        vivspis();
 
 
         //textView.setText(kom.name);
@@ -69,6 +82,10 @@ public class ComandListActivity extends ActionBarActivity {
         //textView.setText(kom1.name);
 
     }
+    void createupdatedial (){
+        dialog = new com.example.user.smsender.Dialog();
+        dialog.show(getFragmentManager(), "Dialog");
+    };
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -80,12 +97,16 @@ public class ComandListActivity extends ActionBarActivity {
                         .setPositiveButton("Отправить",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        //TODO: отправка смс
                                         dialog.cancel();
                                     }
                                 })
                         .setNeutralButton("Изменить",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        MyApp myApp = ((MyApp) getApplicationContext());
+                                        myApp.isupdate = true;
+                                        createupdatedial();
                                         dialog.cancel();
                                     }
                                 })
@@ -107,11 +128,7 @@ public class ComandListActivity extends ActionBarActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         //myApp.dbHelper.delComand(posspisok);
                                         delcomand();
-                                        Intent intent = getIntent();
-                                        finish();
-                                        startActivity(intent);
-                                        dialog.cancel();
-
+                                        vivspis();
                                     }
                                 })
                         .setNegativeButton("Нет",
@@ -120,10 +137,7 @@ public class ComandListActivity extends ActionBarActivity {
                                         dialog.cancel();
                                     }
                                 });
-
                 return builder1.create();
-
-
             default:
                 return null;
         }
@@ -133,7 +147,14 @@ public class ComandListActivity extends ActionBarActivity {
     }
     void delcomand(){
         MyApp myApp = ((MyApp) getApplicationContext());
-        myApp.dbHelper.delComand(posspisok);
+        myApp.dbHelper.delComand(myApp.currentpos);
+    }
+    void vivspis (){
+        if (kom_list.getFooterViewsCount() == 0){
+            kom_list.addFooterView(footer);
+        }
+        komListAdapter = new KomListAdapter(this);
+        kom_list.setAdapter(komListAdapter);
     }
 
     @Override

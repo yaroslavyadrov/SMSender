@@ -10,18 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardView"
-        card_view:cardCornerRadius="2dp"
+        card_view:cardCornerRadius="0dp"
         card_view:cardBackgroundColor="#ffffffff"
         card_view:cardElevation="6dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:layout_margin="15dp">
+        android:layout_margin="15dp"
+        android:background="#ff8eab39">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="#ff8eab39">
+            android:background="#42A5F5">
 
 
             <TextView

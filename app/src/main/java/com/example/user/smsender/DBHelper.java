@@ -9,9 +9,6 @@ import android.util.Log;
 
 import com.example.user.smsender.models.Komanda;
 
-import org.androidannotations.annotations.Background;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
