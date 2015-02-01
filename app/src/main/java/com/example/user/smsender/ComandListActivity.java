@@ -3,14 +3,20 @@ package com.example.user.smsender;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
 
@@ -46,30 +52,33 @@ public class ComandListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_comand_list_activity);
         //DBHelper dbh = new DBHelper(this);
         MyApp myApp = ((MyApp) getApplicationContext());
-        footer = getLayoutInflater().inflate(R.layout.footer, null);
-        Button button_footer = (Button) footer.findViewById(R.id.button_footer);
+        //footer = getLayoutInflater().inflate(R.layout.footer, null);
+        footer = getLayoutInflater().inflate(R.layout.footer, null, false);
 
+
+        Button button_footer = (Button) footer.findViewById(R.id.button_footer);
         button_footer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MyApp myApp = ((MyApp) getApplicationContext());
                 myApp.isupdate = false;
                 createupdatedial();
+                vivspis();
             }
         });
-
+        vivspis();
 
         //TextView tv = (TextView) findViewById (R.id.textView);
         //ListView kom_list = (ListView) findViewById(R.id.kom_list);
 
-        Komanda kom = new Komanda();
+       /* Komanda kom = new Komanda();
         kom.id = 111;
         kom.last_date = "date";
         kom.text = "textsms";
         kom.nomer_tel = "8937";
         kom.name = "name";
         myApp.dbHelper.addComand(kom);
-        vivspis();
+        vivspis();*/
 
 
         //textView.setText(kom.name);
@@ -150,11 +159,29 @@ public class ComandListActivity extends ActionBarActivity {
         myApp.dbHelper.delComand(myApp.currentpos);
     }
     void vivspis (){
-        if (kom_list.getFooterViewsCount() == 0){
-            kom_list.addFooterView(footer);
-        }
         komListAdapter = new KomListAdapter(this);
-        kom_list.setAdapter(komListAdapter);
+
+        //kom_list.setEmptyView(findViewById(R.id.empty_list_item));
+        //View empty = getLayoutInflater().inflate(R.layout.footer, null, false);
+        //addContentView(empty, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //kom_list.setEmptyView(empty);
+        MyApp myApp = ((MyApp) getApplicationContext());
+
+        if (kom_list.getCount() > 0  ){
+            if (kom_list.getFooterViewsCount() == 0){
+                kom_list.addFooterView(footer);
+            }
+        } else {
+            addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            kom_list.setEmptyView(footer);
+        }
+        if (kom_list.getCount() != 0){
+            kom_list.setAdapter(komListAdapter);
+        }
+
+
+
+
     }
 
     @Override

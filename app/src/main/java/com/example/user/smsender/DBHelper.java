@@ -53,7 +53,7 @@ import java.util.ArrayList;
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
-        public void addComand (Komanda kom){
+        public void addComand (Komanda kom){//TODO:можно брать из муапп исупдейт и тут все движения с добавлением и удалением делать
             ContentValues cv = new ContentValues();
             // подготовим данные для вставки в виде пар: наименование столбца - значение
 
@@ -61,7 +61,6 @@ import java.util.ArrayList;
             cv.put(KEY_NOMER, kom.nomer_tel);
             cv.put(KEY_NAME, kom.name);
             cv.put(KEY_TEXT, kom.text);
-            cv.put(KEY_DATE, kom.last_date);
             // вставляем запись и получаем ее ID
             long rowID = dbs.insert(DATABASE_TABLE, null, cv);
             Log.d("My_Logs", "row inserted, ID = " + rowID);
@@ -97,7 +96,7 @@ import java.util.ArrayList;
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + id,null);
 
     }
-    public void updateComand (Komanda kom){
+    public void updateComand (Komanda kom){ //TODO: написать нормальный упдатер с сохранением ид
 
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + kom.id,null);
         ContentValues cv = new ContentValues();
@@ -105,7 +104,6 @@ import java.util.ArrayList;
         cv.put(KEY_NOMER, kom.nomer_tel);
         cv.put(KEY_NAME, kom.name);
         cv.put(KEY_TEXT, kom.text);
-        cv.put(KEY_DATE, kom.last_date);
         // вставляем запись и получаем ее ID
         long rowID = dbs.insert(DATABASE_TABLE, null, cv);
         Log.d("My_Logs", "row inserted, ID = " + rowID);
