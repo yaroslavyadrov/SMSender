@@ -53,11 +53,12 @@ public class KomListAdapter extends BaseAdapter {
         }
 
         Komanda p = objects.get(position);
-        if (p.last_date != null){
+        //if (p.last_date != null){//TODO:раскоментить строку, потому что щас не показывает тк дата пустая
             ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText(p.id+" "+p.last_date+" "+p.nomer_tel);
-        }
+        //}
         ((TextView) view.findViewById(R.id.kom_name_tv)).setText(p.name+p.text);
         return view;
     }
+
 
 }

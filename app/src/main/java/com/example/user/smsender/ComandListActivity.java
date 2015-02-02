@@ -3,20 +3,15 @@ package com.example.user.smsender;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
 
@@ -26,15 +21,13 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 @EActivity
 public class ComandListActivity extends ActionBarActivity {
     KomListAdapter komListAdapter;
-    ArrayList<Komanda> komlist;
     View footer;// = getLayoutInflater().inflate(R.layout.footer, null);
     DialogFragment dialog;
-
-
-
 
     @ViewById
     ListView kom_list;
@@ -45,16 +38,28 @@ public class ComandListActivity extends ActionBarActivity {
         myApp.currentpos = selectedKomanda.id;
         showDialog(0);
     }
+
+    public void onEvent (RefreshEvent e){
+        komListAdapter = new KomListAdapter(this);
+        MyApp myApp = ((MyApp) getApplicationContext());
+        if (kom_list.getFooterViewsCount() == 0){
+            kom_list.addFooterView(footer);
+        }
+        if (myApp.dbHelper.getallComands() != null){
+            kom_list.setAdapter(komListAdapter);
+
+        } else {
+            addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            kom_list.setEmptyView(footer);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comand_list_activity);
-        //DBHelper dbh = new DBHelper(this);
-        MyApp myApp = ((MyApp) getApplicationContext());
-        //footer = getLayoutInflater().inflate(R.layout.footer, null);
-        footer = getLayoutInflater().inflate(R.layout.footer, null, false);
-
+        EventBus.getDefault().register(this);
+        footer = getLayoutInflater().inflate(R.layout.footer, null);
 
         Button button_footer = (Button) footer.findViewById(R.id.button_footer);
         button_footer.setOnClickListener(new View.OnClickListener() {
@@ -63,13 +68,10 @@ public class ComandListActivity extends ActionBarActivity {
                 MyApp myApp = ((MyApp) getApplicationContext());
                 myApp.isupdate = false;
                 createupdatedial();
-                vivspis();
             }
         });
-        vivspis();
+        EventBus.getDefault().post(new RefreshEvent());;
 
-        //TextView tv = (TextView) findViewById (R.id.textView);
-        //ListView kom_list = (ListView) findViewById(R.id.kom_list);
 
        /* Komanda kom = new Komanda();
         kom.id = 111;
@@ -135,9 +137,8 @@ public class ComandListActivity extends ActionBarActivity {
                         .setPositiveButton("Да",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //myApp.dbHelper.delComand(posspisok);
                                         delcomand();
-                                        vivspis();
+                                        EventBus.getDefault().post(new RefreshEvent());;
                                     }
                                 })
                         .setNegativeButton("Нет",
@@ -158,31 +159,7 @@ public class ComandListActivity extends ActionBarActivity {
         MyApp myApp = ((MyApp) getApplicationContext());
         myApp.dbHelper.delComand(myApp.currentpos);
     }
-    void vivspis (){
-        komListAdapter = new KomListAdapter(this);
 
-        //kom_list.setEmptyView(findViewById(R.id.empty_list_item));
-        //View empty = getLayoutInflater().inflate(R.layout.footer, null, false);
-        //addContentView(empty, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        //kom_list.setEmptyView(empty);
-        MyApp myApp = ((MyApp) getApplicationContext());
-
-        if (kom_list.getCount() > 0  ){
-            if (kom_list.getFooterViewsCount() == 0){
-                kom_list.addFooterView(footer);
-            }
-        } else {
-            addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            kom_list.setEmptyView(footer);
-        }
-        if (kom_list.getCount() != 0){
-            kom_list.setAdapter(komListAdapter);
-        }
-
-
-
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -204,5 +181,11 @@ public class ComandListActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
