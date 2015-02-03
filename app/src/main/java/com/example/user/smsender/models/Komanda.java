@@ -9,4 +9,5 @@ public class Komanda {
     public String name;
     public String text;
     public String last_date;
+    public String color;
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
     public static final String KEY_NAME = "name";
     public static final String KEY_TEXT = "textsms";
     public static final String KEY_DATE = "date";
+    public static final String KEY_COLOR = "color";
     private static final String DATABASE_NAME ="myDB";
     private static final String DATABASE_TABLE ="tableComands";
 
@@ -45,7 +46,8 @@ import java.util.ArrayList;
                     + KEY_NOMER + " text,"
                     + KEY_NAME + " text,"
                     + KEY_TEXT + " text,"
-                    + KEY_DATE +" text"
+                    + KEY_DATE +" text,"
+                    + KEY_COLOR +" text"
                     + ");");
             Log.d("MyLogs","Созданы");
         }
@@ -61,6 +63,7 @@ import java.util.ArrayList;
             cv.put(KEY_NOMER, kom.nomer_tel);
             cv.put(KEY_NAME, kom.name);
             cv.put(KEY_TEXT, kom.text);
+            cv.put(KEY_COLOR, kom.color);
             // вставляем запись и получаем ее ID
             long rowID = dbs.insert(DATABASE_TABLE, null, cv);
             Log.d("My_Logs", "row inserted, ID = " + rowID);
@@ -82,6 +85,7 @@ import java.util.ArrayList;
                         komanda.name = c.getString(2);
                         komanda.text = c.getString(3);
                         komanda.last_date = c.getString(4);
+                        komanda.color = c.getString(5);
                     }
                 } catch (Exception e) {
                     komanda = null;
@@ -98,15 +102,25 @@ import java.util.ArrayList;
     }
     public void updateComand (Komanda kom){ //TODO: написать нормальный упдатер с сохранением ид
 
-        dbs.delete(DATABASE_TABLE, KEY_ID + "=" + kom.id,null);
+        /*dbs.delete(DATABASE_TABLE, KEY_ID + "=" + kom.id,null);
         ContentValues cv = new ContentValues();
         // подготовим данные для вставки в виде пар: наименование столбца - значение
         cv.put(KEY_NOMER, kom.nomer_tel);
         cv.put(KEY_NAME, kom.name);
         cv.put(KEY_TEXT, kom.text);
+        cv.put(KEY_COLOR, kom.color);
         // вставляем запись и получаем ее ID
         long rowID = dbs.insert(DATABASE_TABLE, null, cv);
-        Log.d("My_Logs", "row inserted, ID = " + rowID);
+        Log.d("My_Logs", "row inserted, ID = " + rowID);*/
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NOMER, kom.nomer_tel);
+        cv.put(KEY_NAME, kom.name);
+        cv.put(KEY_TEXT, kom.text);
+        cv.put(KEY_COLOR, kom.color);
+        String where = KEY_ID + " = ?";// + kom.id + "'";
+        String[] whereArgs = new String[] {String.valueOf(kom.id)};
+        int updCount = dbs.update(DATABASE_TABLE, cv, where, whereArgs);
+        Log.d("MyLogs", updCount + " rows updated");
 
     }
     public ArrayList<Komanda> getallComands (){
@@ -120,6 +134,7 @@ import java.util.ArrayList;
             komanda.name = c.getString(2);
             komanda.text = c.getString(3);
             komanda.last_date = c.getString(4);
+            komanda.color = c.getString(5);
             listofComands.add(komanda);
             c.moveToNext();
         }

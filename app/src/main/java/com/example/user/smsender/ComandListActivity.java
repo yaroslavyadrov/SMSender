@@ -70,7 +70,19 @@ public class ComandListActivity extends ActionBarActivity {
                 createupdatedial();
             }
         });
-        EventBus.getDefault().post(new RefreshEvent());;
+        EventBus.getDefault().post(new RefreshEvent());
+        /*komListAdapter = new KomListAdapter(this);
+        MyApp myApp = ((MyApp) getApplicationContext());
+        if (kom_list.getFooterViewsCount() == 0){
+            kom_list.addFooterView(footer);
+        }
+        if (myApp.dbHelper.getallComands() != null){
+            kom_list.setAdapter(komListAdapter);
+
+        } else {
+            addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            kom_list.setEmptyView(footer);
+        }*/
 
 
        /* Komanda kom = new Komanda();

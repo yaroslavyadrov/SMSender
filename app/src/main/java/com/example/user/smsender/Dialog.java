@@ -4,11 +4,15 @@ package com.example.user.smsender;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.user.smsender.models.Komanda;
 
@@ -17,6 +21,9 @@ import de.greenrobot.event.EventBus;
 
 public class Dialog extends DialogFragment {
     Komanda kom;
+    String[] colornames = {"Красный", "Голубой", "Желтый", "Оранжевый", "Зеленый"};
+    String[] colors = {"#EF5350","#00B0FF","#FFEB3B","#F57C00","#8BC34A"};
+    String color;
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,6 +41,31 @@ public class Dialog extends DialogFragment {
         } else {
             getDialog().setTitle("Добавить команду");
         }
+        // адаптер
+        ArrayAdapter<String> adapter;
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, colornames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+        // заголовок
+        spinner.setPrompt("Цвет");
+        // выделяем элемент
+        spinner.setSelection(2);
+        // устанавливаем обработчик нажатия
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                color = colors[position];
+                Log.d("MyLogs", "color" + color);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         Button yesbtn = (Button) v.findViewById(R.id.btnYes);
         yesbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +74,7 @@ public class Dialog extends DialogFragment {
                 kom.name = nameet.getText().toString();
                 kom.text = textet.getText().toString();
                 kom.nomer_tel = nomeret.getText().toString();
+                kom.color = color;
                 if (myApp.isupdate){
                     myApp.dbHelper.updateComand(kom);
                 }else {

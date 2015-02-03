@@ -1,10 +1,13 @@
 package com.example.user.smsender;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
@@ -56,7 +59,9 @@ public class KomListAdapter extends BaseAdapter {
         //if (p.last_date != null){//TODO:раскоментить строку, потому что щас не показывает тк дата пустая
             ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText(p.id+" "+p.last_date+" "+p.nomer_tel);
         //}
+        int col = Color.parseColor(p.color);
         ((TextView) view.findViewById(R.id.kom_name_tv)).setText(p.name+p.text);
+        ((LinearLayout) view.findViewById(R.id.linlayBack)).setBackgroundColor(col);
         return view;
     }
 
