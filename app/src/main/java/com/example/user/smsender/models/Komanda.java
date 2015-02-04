@@ -10,4 +10,7 @@ public class Komanda {
     public String text;
     public String last_date;
     public String color;
+    public int getID(){
+        return this.id;
+    }
 }

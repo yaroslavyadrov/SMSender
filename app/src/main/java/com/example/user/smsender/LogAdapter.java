@@ -2,12 +2,10 @@ package com.example.user.smsender;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
@@ -15,18 +13,18 @@ import com.example.user.smsender.models.Komanda;
 import java.util.ArrayList;
 
 /**
- * Created by user on 26.01.15.
+ * Created by user on 05.02.15.
  */
-public class KomListAdapter extends BaseAdapter {
+public class LogAdapter extends BaseAdapter {
     private Context ctx;
     private LayoutInflater lInflater;
     public ArrayList<Komanda> objects;
     DBHelper dbHelper;
 
-    KomListAdapter(Context context){
+    LogAdapter(Context context){
         ctx = context;
         dbHelper = new DBHelper(context);
-        objects = dbHelper.getallComands();
+        objects = dbHelper.getallTimestamps();
         lInflater = (LayoutInflater) ctx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -52,18 +50,16 @@ public class KomListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            view = lInflater.inflate(R.layout.kom_list_item, parent, false);
+            view = lInflater.inflate(R.layout.log_lv_item, parent, false);
         }
 
         Komanda p = objects.get(position);
-        if (p.last_date != null){
-            ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText("Последний раз отсылалось: "+p.last_date);
-        }
+
+        ((TextView) view.findViewById(R.id.datetv)).setText(p.last_date);
+
         int col = Color.parseColor(p.color);
-        ((TextView) view.findViewById(R.id.kom_name_tv)).setText(p.name);
-        view.findViewById(R.id.linlayBack).setBackgroundColor(col);
+        ((TextView) view.findViewById(R.id.nametv)).setText(p.name);
+        view.findViewById(R.id.log_itm_back).setBackgroundColor(col);
         return view;
     }
-
-
 }

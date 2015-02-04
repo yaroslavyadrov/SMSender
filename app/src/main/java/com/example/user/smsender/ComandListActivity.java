@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,10 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 
@@ -112,6 +116,7 @@ public class ComandListActivity extends ActionBarActivity {
 
     @Override
     protected Dialog onCreateDialog(int id) {
+        final MyApp myApp = ((MyApp) getApplicationContext());
         switch (id) {
             case 0:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -120,14 +125,14 @@ public class ComandListActivity extends ActionBarActivity {
                         .setPositiveButton("Отправить",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //TODO: отправка смс
+                                        otprdial();
                                         dialog.cancel();
                                     }
                                 })
                         .setNeutralButton("Изменить",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        MyApp myApp = ((MyApp) getApplicationContext());
+                                        //MyApp myApp = ((MyApp) getApplicationContext());
                                         myApp.isupdate = true;
                                         createupdatedial();
                                         dialog.cancel();
@@ -150,7 +155,7 @@ public class ComandListActivity extends ActionBarActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         delcomand();
-                                        EventBus.getDefault().post(new RefreshEvent());;
+                                        EventBus.getDefault().post(new RefreshEvent());
                                     }
                                 })
                         .setNegativeButton("Нет",
@@ -160,12 +165,43 @@ public class ComandListActivity extends ActionBarActivity {
                                     }
                                 });
                 return builder1.create();
+            case 2:
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                builder2.setMessage("Хотите отправить команду на номер: " + myApp.dbHelper.getComand(myApp.currentpos).nomer_tel)
+                        .setCancelable(true)
+                        .setPositiveButton("Да",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //TODO: отправка смс
+                                        Date now = new Date();
+                                        DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+                                        String s = formatter.format(now);
+                                        Komanda kom;
+                                        kom = myApp.dbHelper.getComand(myApp.currentpos);
+                                        kom.last_date = s;
+                                        myApp.dbHelper.updateComand(kom);
+                                        myApp.dbHelper.addTimestamp(kom);
+                                        Log.d("MyLogs", "now " + s);
+                                        EventBus.getDefault().post(new RefreshEvent());
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNegativeButton("Нет",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                return builder2.create();
             default:
                 return null;
         }
     }
     void showd(){
         showDialog(1);
+    }
+    void otprdial(){
+        showDialog(2);
     }
     void delcomand(){
         MyApp myApp = ((MyApp) getApplicationContext());
@@ -188,7 +224,8 @@ public class ComandListActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_log) {
+            LogActivity_.intent(this).start();
             return true;
         }
 

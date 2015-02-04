@@ -25,6 +25,7 @@ import java.util.ArrayList;
     public static final String KEY_COLOR = "color";
     private static final String DATABASE_NAME ="myDB";
     private static final String DATABASE_TABLE ="tableComands";
+    private static final String DATABASE_TABLE_DATES ="tableDates";
 
     SQLiteDatabase dbs;
         public DBHelper(Context context) {
@@ -49,6 +50,12 @@ import java.util.ArrayList;
                     + KEY_DATE +" text,"
                     + KEY_COLOR +" text"
                     + ");");
+            db.execSQL("create table " + DATABASE_TABLE_DATES + "("
+                    + KEY_ID + " integer primary key autoincrement,"
+                    + KEY_DATE +" text,"
+                    + KEY_NAME + " text,"
+                    + KEY_COLOR + " text"
+                    + ");");
             Log.d("MyLogs","Созданы");
         }
 
@@ -69,6 +76,14 @@ import java.util.ArrayList;
             Log.d("My_Logs", "row inserted, ID = " + rowID);
             //dbs.close();
         }
+    public void addTimestamp (Komanda kom){
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_DATE, kom.last_date);
+        cv.put(KEY_NAME, kom.name);
+        cv.put(KEY_COLOR, kom.color);
+        long rowID = dbs.insert(DATABASE_TABLE_DATES, null, cv);
+        Log.d("My_Logs", "row inserted, ID = " + rowID + kom.last_date + kom.name);
+    }
 
     public Komanda getComand(int id){
             Komanda komanda = new Komanda();
@@ -100,27 +115,19 @@ import java.util.ArrayList;
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + id,null);
 
     }
-    public void updateComand (Komanda kom){ //TODO: написать нормальный упдатер с сохранением ид
+    public void updateComand (Komanda kom){
 
-        /*dbs.delete(DATABASE_TABLE, KEY_ID + "=" + kom.id,null);
-        ContentValues cv = new ContentValues();
-        // подготовим данные для вставки в виде пар: наименование столбца - значение
-        cv.put(KEY_NOMER, kom.nomer_tel);
-        cv.put(KEY_NAME, kom.name);
-        cv.put(KEY_TEXT, kom.text);
-        cv.put(KEY_COLOR, kom.color);
-        // вставляем запись и получаем ее ID
-        long rowID = dbs.insert(DATABASE_TABLE, null, cv);
-        Log.d("My_Logs", "row inserted, ID = " + rowID);*/
         ContentValues cv = new ContentValues();
         cv.put(KEY_NOMER, kom.nomer_tel);
         cv.put(KEY_NAME, kom.name);
         cv.put(KEY_TEXT, kom.text);
+        cv.put(KEY_DATE, kom.last_date);
         cv.put(KEY_COLOR, kom.color);
-        String where = KEY_ID + " = ?";// + kom.id + "'";
+        String where = KEY_ID + " = ?";
         String[] whereArgs = new String[] {String.valueOf(kom.id)};
-        int updCount = dbs.update(DATABASE_TABLE, cv, where, whereArgs);
-        Log.d("MyLogs", updCount + " rows updated");
+        int updCount = dbs.update(DATABASE_TABLE, cv, where,
+                whereArgs);
+        Log.d("MyLogs", updCount + " row updated");
 
     }
     public ArrayList<Komanda> getallComands (){
@@ -139,6 +146,21 @@ import java.util.ArrayList;
             c.moveToNext();
         }
         return listofComands;
+    }
+    public ArrayList<Komanda> getallTimestamps (){
+        ArrayList <Komanda> listofTimestamps = new ArrayList<>();
+        Cursor c = dbs.query(DATABASE_TABLE_DATES, null, null, null, null, null, null);
+        c.moveToLast();
+        while (!c.isBeforeFirst()) {
+            Komanda timestamp = new Komanda();
+            timestamp.id = Integer.parseInt(c.getString(0));
+            timestamp.last_date = c.getString(1);
+            timestamp.name = c.getString(2);
+            timestamp.color = c.getString(3);
+            listofTimestamps.add(timestamp);
+            c.moveToPrevious();
+        }
+        return listofTimestamps;
     }
 
 

@@ -71,9 +71,13 @@ public class Dialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 kom = new Komanda();
+                kom.id = myApp.currentpos;
                 kom.name = nameet.getText().toString();
                 kom.text = textet.getText().toString();
                 kom.nomer_tel = nomeret.getText().toString();
+                if (myApp.isupdate) {
+                    kom.last_date = myApp.dbHelper.getComand(myApp.currentpos).last_date;
+                }
                 kom.color = color;
                 if (myApp.isupdate){
                     myApp.dbHelper.updateComand(kom);
@@ -81,6 +85,13 @@ public class Dialog extends DialogFragment {
                     myApp.dbHelper.addComand(kom);
                 }
                 EventBus.getDefault().post(new RefreshEvent());
+                dismiss();
+            }
+        });
+        Button nobtn = (Button) v.findViewById(R.id.btnNo);
+        nobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });
