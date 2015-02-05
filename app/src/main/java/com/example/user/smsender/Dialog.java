@@ -75,11 +75,9 @@ public class Dialog extends DialogFragment {
                 kom.name = nameet.getText().toString();
                 kom.text = textet.getText().toString();
                 kom.nomer_tel = nomeret.getText().toString();
-                if (myApp.isupdate) {
-                    kom.last_date = myApp.dbHelper.getComand(myApp.currentpos).last_date;
-                }
                 kom.color = color;
                 if (myApp.isupdate){
+                    kom.last_date = myApp.dbHelper.getComand(myApp.currentpos).last_date;
                     myApp.dbHelper.updateComand(kom);
                 }else {
                     myApp.dbHelper.addComand(kom);

@@ -15,10 +15,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="Имя:"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight=".0001">
+            android:layout_weight=".0001"
+            android:textSize="20dp">
         </TextView>
 
         <EditText
@@ -26,7 +27,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/name_et"
             android:layout_weight="1"
-            android:layout_margin="20dp" />
+            android:layout_margin="10dp" />
 
     </LinearLayout>
 
@@ -40,9 +41,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="Номер телефона:"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="20dp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -50,7 +52,7 @@
             android:inputType="phone"
             android:ems="10"
             android:id="@+id/nomer_et"
-            android:layout_margin="20dp" />
+            android:layout_margin="10dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,16 +65,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="Текст сообщения:"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_weight=".00001" />
+            android:layout_weight=".00001"
+            android:textSize="20dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/text_et"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -86,15 +89,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="Цвет карточки:"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="20dp" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
-            android:layout_margin="20dp" />
+            android:layout_margin="10dp" />
 
     </LinearLayout>
 
