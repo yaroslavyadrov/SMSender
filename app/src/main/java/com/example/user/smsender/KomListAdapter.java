@@ -2,21 +2,17 @@ package com.example.user.smsender;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
 
 import java.util.ArrayList;
 
-/**
- * Created by user on 26.01.15.
- */
+
 public class KomListAdapter extends BaseAdapter {
     private Context ctx;
     private LayoutInflater lInflater;

@@ -30,7 +30,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import de.greenrobot.event.EventBus;
@@ -38,7 +37,7 @@ import de.greenrobot.event.EventBus;
 @EActivity
 public class ComandListActivity extends ActionBarActivity {
     KomListAdapter komListAdapter;
-    View footer;// = getLayoutInflater().inflate(R.layout.footer, null);
+    View footer;
     DialogFragment dialog;
 
     @ViewById
@@ -59,7 +58,6 @@ public class ComandListActivity extends ActionBarActivity {
         }
         if (myApp.dbHelper.getallComands() != null){
             kom_list.setAdapter(komListAdapter);
-
         } else {
             addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             kom_list.setEmptyView(footer);
@@ -83,44 +81,12 @@ public class ComandListActivity extends ActionBarActivity {
             }
         });
         EventBus.getDefault().post(new RefreshEvent());
-        /*komListAdapter = new KomListAdapter(this);
-        MyApp myApp = ((MyApp) getApplicationContext());
-        if (kom_list.getFooterViewsCount() == 0){
-            kom_list.addFooterView(footer);
-        }
-        if (myApp.dbHelper.getallComands() != null){
-            kom_list.setAdapter(komListAdapter);
-
-        } else {
-            addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            kom_list.setEmptyView(footer);
-        }*/
-
-
-       /* Komanda kom = new Komanda();
-        kom.id = 111;
-        kom.last_date = "date";
-        kom.text = "textsms";
-        kom.nomer_tel = "8937";
-        kom.name = "name";
-        myApp.dbHelper.addComand(kom);
-        vivspis();*/
-
-
-        //textView.setText(kom.name);
-        //kom.name = "name1";
-        //dbh.updateComand(kom);
-
-        //Komanda kom1 = dbh.getComand(kom.id);
-        //dbh.delComand(kom.id);
-
-        //textView.setText(kom1.name);
-
     }
+
     void createupdatedial (){
         dialog = new com.example.user.smsender.Dialog();
         dialog.show(getFragmentManager(), "Dialog");
-    };
+    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -180,7 +146,6 @@ public class ComandListActivity extends ActionBarActivity {
                         .setPositiveButton("Да",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //TODO: отправка смс
                                         Komanda kom;
                                         kom = myApp.dbHelper.getComand(myApp.currentpos);
                                         sendSMS(kom.nomer_tel, kom.text);
@@ -198,16 +163,20 @@ public class ComandListActivity extends ActionBarActivity {
                 return null;
         }
     }
+
     void showd(){
         showDialog(1);
     }
+
     void otprdial(){
         showDialog(2);
     }
+
     void delcomand(){
         MyApp myApp = ((MyApp) getApplicationContext());
         myApp.dbHelper.delComand(myApp.currentpos);
     }
+
     void updatecurtime (){
         MyApp myApp = ((MyApp) getApplicationContext());
         Date now = new Date();
@@ -221,6 +190,7 @@ public class ComandListActivity extends ActionBarActivity {
         Log.d("MyLogs", "now " + s);
         EventBus.getDefault().post(new RefreshEvent());
     }
+
     private void sendSMS(String phoneNumber, String message)
     {
         String SENT = "SMS_SENT";

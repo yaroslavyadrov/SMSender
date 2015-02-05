@@ -12,9 +12,7 @@ import com.example.user.smsender.models.Komanda;
 
 import java.util.ArrayList;
 
-/**
- * Created by user on 05.02.15.
- */
+
 public class LogAdapter extends BaseAdapter {
     private Context ctx;
     private LayoutInflater lInflater;

@@ -11,13 +11,10 @@ import com.example.user.smsender.models.Komanda;
 
 import java.util.ArrayList;
 
-/**
- * Created by user on 25.01.15.
- */
+
 
  public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_ID = "id";
-    //public static final String KEY_COMID = "comID";
     public static final String KEY_NOMER = "nomertel";
     public static final String KEY_NAME = "name";
     public static final String KEY_TEXT = "textsms";
@@ -76,6 +73,7 @@ import java.util.ArrayList;
             Log.d("My_Logs", "row inserted, ID = " + rowID);
             //dbs.close();
         }
+
     public void addTimestamp (Komanda kom){
         ContentValues cv = new ContentValues();
         cv.put(KEY_DATE, kom.last_date);
@@ -113,8 +111,8 @@ import java.util.ArrayList;
     }
     public void delComand (int id){
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + id,null);
-
     }
+
     public void updateComand (Komanda kom){
 
         ContentValues cv = new ContentValues();
@@ -128,8 +126,8 @@ import java.util.ArrayList;
         int updCount = dbs.update(DATABASE_TABLE, cv, where,
                 whereArgs);
         Log.d("MyLogs", updCount + " row updated");
-
     }
+
     public ArrayList<Komanda> getallComands (){
         ArrayList <Komanda> listofComands = new ArrayList<>();
         Cursor c = dbs.query(DATABASE_TABLE, null, null, null, null, null, null);
@@ -147,6 +145,7 @@ import java.util.ArrayList;
         }
         return listofComands;
     }
+
     public ArrayList<Komanda> getallTimestamps (){
         ArrayList <Komanda> listofTimestamps = new ArrayList<>();
         Cursor c = dbs.query(DATABASE_TABLE_DATES, null, null, null, null, null, null);
@@ -162,46 +161,6 @@ import java.util.ArrayList;
         }
         return listofTimestamps;
     }
-
-
-
-
-
-
-
-
-/*
-        public void setTest(int id, String date, String JSON){
-            //delete по id надо добавить
-            String idS = Integer.toString(id);
-            int del = dbs.delete("tableTests", "nameID = " + Integer.toString(id), null);
-            //  int del = dbs.delete("tableTests", "nameid = ?",  new String[] {idS});
-            ContentValues cv=new ContentValues();
-            cv.put("nameID", Integer.toString(id));
-            cv.put("date", date);
-            cv.put("JSON", JSON);
-            dbs.insert("tableTests", null, cv);
-        }
-
-        public void setAnswerInBD(int id, String json){
-            //delete по id надо добавить
-            dbs.delete("tableAnswers", "nameID = " + Integer.toString(id), null);
-            ContentValues cv=new ContentValues();
-            cv.put("nameID", Integer.toString(id));
-            cv.put("JSON", json);
-            dbs.insert("tableAnswers", null, cv);
-            // Log.d("MyLogs","Добавлен");
-        }
-
-        public String getAnswersFromBD(int id){
-            String nameID = Integer.toString(id);
-            String json;
-            Cursor c = dbs.query("tableAnswers",  null, "nameID = ?", new String[] {nameID}, null, null, null);
-            c.moveToFirst();
-            json = c.getString(2);
-            // Log.d("MyLogs","Взят");
-            return json;
-        }*/
     }
 
 
