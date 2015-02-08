@@ -20,7 +20,7 @@ public class KomListAdapter extends BaseAdapter {
     public ArrayList<Komanda> objects;
     DBHelper dbHelper;
 
-    KomListAdapter(Context context){
+    KomListAdapter(Context context) {
         ctx = context;
         dbHelper = new DBHelper(context);
         objects = dbHelper.getallComands();
@@ -48,35 +48,40 @@ public class KomListAdapter extends BaseAdapter {
 
    /* @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
+        View view;
+        if (convertView == null) {
             view = lInflater.inflate(R.layout.kom_list_item, parent, false);
         }
-
+        else {
+            view = convertView;
+        }
         Komanda p = objects.get(position);
-        if (p.last_date != null){
-            ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText("Последний раз отсылалось: "+p.last_date);
+        if (p.last_date != null) {
+            ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText("Последний раз отсылалось: " + p.last_date);
             //p.last_date = null;
         }
         int col = Color.parseColor(p.color);
         ((TextView) view.findViewById(R.id.kom_name_tv)).setText(p.name);
         view.findViewById(R.id.linlayBack).setBackgroundColor(col);
         return view;
-    }*/
+    }
+}*/
    @Override
    public View getView(int position, View convertView, ViewGroup parent) {
        //System.out.println("getView " + position + " " + convertView);
-       ViewHolder holder = null;
+       ViewHolder holder;
        if (convertView == null) {
-           convertView = lInflater.inflate(R.layout.kom_list_item, null);
            holder = new ViewHolder();
-           holder.nametext = (TextView)convertView.findViewById(R.id.kom_name_tv);
-           holder.lastusetext = (TextView)convertView.findViewById(R.id.kom_lastuse_tv);
-           holder.linlayback = (LinearLayout)convertView.findViewById(R.id.linlayBack);
-           convertView.setTag(holder);
+
        } else {
            holder = (ViewHolder)convertView.getTag();
        }
+       convertView = lInflater.inflate(R.layout.kom_list_item, null);
+       holder.nametext = (TextView)convertView.findViewById(R.id.kom_name_tv);
+       holder.lastusetext = (TextView)convertView.findViewById(R.id.kom_lastuse_tv);
+       holder.linlayback = (LinearLayout)convertView.findViewById(R.id.linlayBack);
+       convertView.setTag(holder);
+
        holder.nametext.setText(objects.get(position).name);
        if(objects.get(position).last_date != null) {
         holder.lastusetext.setText(objects.get(position).last_date);

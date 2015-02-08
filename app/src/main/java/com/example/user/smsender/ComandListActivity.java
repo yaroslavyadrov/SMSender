@@ -210,7 +210,7 @@ public class ComandListActivity extends ActionBarActivity {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
-                        updatecurtime();
+                        //updatecurtime();
                         Toast.makeText(getBaseContext(), "SMS отправлено",
                                 Toast.LENGTH_SHORT).show();
                         break;

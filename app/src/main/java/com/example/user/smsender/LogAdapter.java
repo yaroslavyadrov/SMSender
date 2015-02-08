@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
@@ -44,7 +45,7 @@ public class LogAdapter extends BaseAdapter {
         return komanda.id;
     }
 
-    @Override
+    /*@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
@@ -60,4 +61,33 @@ public class LogAdapter extends BaseAdapter {
         view.findViewById(R.id.log_itm_back).setBackgroundColor(col);
         return view;
     }
+}*/
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //System.out.println("getView " + position + " " + convertView);
+        ViewHolder1 holder;
+        if (convertView == null) {
+            holder = new ViewHolder1();
+
+        } else {
+            holder = (ViewHolder1)convertView.getTag();
+        }
+        convertView = lInflater.inflate(R.layout.log_lv_item, null);
+        holder.datetv = (TextView)convertView.findViewById(R.id.datetv);
+        holder.nametv = (TextView)convertView.findViewById(R.id.nametv);
+        holder.log_itm_back = (LinearLayout)convertView.findViewById(R.id.log_itm_back);
+        convertView.setTag(holder);
+
+        holder.datetv.setText(objects.get(position).last_date);
+        holder.nametv.setText(objects.get(position).name);
+        int col = Color.parseColor(objects.get(position).color);
+        holder.log_itm_back.setBackgroundColor(col);
+        return convertView;
+    }
+
+}
+
+class ViewHolder1 {
+    public TextView datetv, nametv;
+    public LinearLayout log_itm_back;
 }
