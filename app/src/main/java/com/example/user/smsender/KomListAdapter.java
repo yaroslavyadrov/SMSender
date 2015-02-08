@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.user.smsender.models.Komanda;
@@ -29,6 +30,7 @@ public class KomListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        //return objects!=null ? objects.size() : 0;
         return objects.size();
     }
 
@@ -44,7 +46,7 @@ public class KomListAdapter extends BaseAdapter {
         return komanda.id;
     }
 
-    @Override
+   /* @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
@@ -54,12 +56,42 @@ public class KomListAdapter extends BaseAdapter {
         Komanda p = objects.get(position);
         if (p.last_date != null){
             ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText("Последний раз отсылалось: "+p.last_date);
+            //p.last_date = null;
         }
         int col = Color.parseColor(p.color);
         ((TextView) view.findViewById(R.id.kom_name_tv)).setText(p.name);
         view.findViewById(R.id.linlayBack).setBackgroundColor(col);
         return view;
-    }
-
+    }*/
+   @Override
+   public View getView(int position, View convertView, ViewGroup parent) {
+       //System.out.println("getView " + position + " " + convertView);
+       ViewHolder holder = null;
+       if (convertView == null) {
+           convertView = lInflater.inflate(R.layout.kom_list_item, null);
+           holder = new ViewHolder();
+           holder.nametext = (TextView)convertView.findViewById(R.id.kom_name_tv);
+           holder.lastusetext = (TextView)convertView.findViewById(R.id.kom_lastuse_tv);
+           holder.linlayback = (LinearLayout)convertView.findViewById(R.id.linlayBack);
+           convertView.setTag(holder);
+       } else {
+           holder = (ViewHolder)convertView.getTag();
+       }
+       holder.nametext.setText(objects.get(position).name);
+       if(objects.get(position).last_date != null) {
+        holder.lastusetext.setText(objects.get(position).last_date);
+       }
+       int col = Color.parseColor(objects.get(position).color);
+       holder.linlayback.setBackgroundColor(col);
+       return convertView;
+   }
 
 }
+
+class ViewHolder {
+    public TextView nametext, lastusetext;
+    public LinearLayout linlayback;
+}
+
+
+

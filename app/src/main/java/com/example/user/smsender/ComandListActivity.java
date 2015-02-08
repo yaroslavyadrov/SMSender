@@ -80,7 +80,9 @@ public class ComandListActivity extends ActionBarActivity {
                 createupdatedial();
             }
         });
-        EventBus.getDefault().post(new RefreshEvent());
+        //if (myApp.dbHelper.getallComands() == null){
+            EventBus.getDefault().post(new RefreshEvent());
+        //}
     }
 
     void createupdatedial (){
@@ -106,7 +108,6 @@ public class ComandListActivity extends ActionBarActivity {
                         .setNeutralButton("Изменить",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //MyApp myApp = ((MyApp) getApplicationContext());
                                         myApp.isupdate = true;
                                         createupdatedial();
                                         dialog.cancel();
@@ -141,7 +142,7 @@ public class ComandListActivity extends ActionBarActivity {
                 return builder1.create();
             case 2:
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
-                builder2.setMessage("Хотите отправить команду на номер: " + myApp.dbHelper.getComand(myApp.currentpos).nomer_tel)
+                builder2.setMessage("Отправить команду?")
                         .setCancelable(true)
                         .setPositiveButton("Да",
                                 new DialogInterface.OnClickListener() {
@@ -218,6 +219,7 @@ public class ComandListActivity extends ActionBarActivity {
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        updatecurtime();
                         Toast.makeText(getBaseContext(), "No service",
                                 Toast.LENGTH_SHORT).show();
                         break;
