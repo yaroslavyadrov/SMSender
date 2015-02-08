@@ -84,7 +84,7 @@ public class KomListAdapter extends BaseAdapter {
 
        holder.nametext.setText(objects.get(position).name);
        if(objects.get(position).last_date != null) {
-        holder.lastusetext.setText(objects.get(position).last_date);
+        holder.lastusetext.setText("Последняя отправка:" + objects.get(position).last_date);
        }
        int col = Color.parseColor(objects.get(position).color);
        holder.linlayback.setBackgroundColor(col);

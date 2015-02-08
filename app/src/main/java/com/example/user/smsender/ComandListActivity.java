@@ -219,7 +219,7 @@ public class ComandListActivity extends ActionBarActivity {
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        updatecurtime();
+                        //updatecurtime();
                         Toast.makeText(getBaseContext(), "No service",
                                 Toast.LENGTH_SHORT).show();
                         break;
@@ -242,6 +242,7 @@ public class ComandListActivity extends ActionBarActivity {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
+                        updatecurtime();
                         Toast.makeText(getBaseContext(), "SMS доставлено",
                                 Toast.LENGTH_SHORT).show();
                         break;
