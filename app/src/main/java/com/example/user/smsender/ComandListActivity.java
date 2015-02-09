@@ -74,6 +74,7 @@ public class ComandListActivity extends ActionBarActivity {
     }
 
     public void onEventAsync (SendEvent send){
+        final MyApp myApp = ((MyApp) getApplicationContext());
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
 
@@ -92,25 +93,28 @@ public class ComandListActivity extends ActionBarActivity {
                     case Activity.RESULT_OK:
                         if (onesend) {
                             EventBus.getDefault().post(new LogEvent());
-                            //updatecurtime();
                             onesend = false;
                         }
                         Toast.makeText(getBaseContext(), "SMS отправлено",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        myApp.isclick = true;
                         Toast.makeText(getBaseContext(), "Generic failure",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        myApp.isclick = true;
                         Toast.makeText(getBaseContext(), "No service",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
+                        myApp.isclick = true;
                         Toast.makeText(getBaseContext(), "Null PDU",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        myApp.isclick = true;
                         Toast.makeText(getBaseContext(), "Radio off",
                                 Toast.LENGTH_SHORT).show();
                         break;
