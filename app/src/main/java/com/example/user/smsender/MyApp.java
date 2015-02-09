@@ -5,7 +5,7 @@ import android.app.Application;
 
 public class MyApp extends Application {
     public int currentpos;
-    public boolean isupdate;
+    public boolean isupdate, isclick = true;
     DBHelper dbHelper;
     @Override
     public void onCreate(){
