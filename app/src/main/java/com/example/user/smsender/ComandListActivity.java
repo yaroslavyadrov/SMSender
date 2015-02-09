@@ -93,6 +93,7 @@ public class ComandListActivity extends ActionBarActivity {
                     case Activity.RESULT_OK:
                         if (onesend) {
                             EventBus.getDefault().post(new LogEvent());
+                            //updatecurtime();
                             onesend = false;
                         }
                         Toast.makeText(getBaseContext(), "SMS отправлено",
@@ -142,7 +143,6 @@ public class ComandListActivity extends ActionBarActivity {
 
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(send.phoneNumber, null, send.message, sentPI, deliveredPI);
-
     }
 
     public void onEvent (RefreshEvent e){
