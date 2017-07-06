@@ -7,11 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.user.smsender.models.Komanda;
+import com.example.user.smsender.models.Command;
 
 import java.util.ArrayList;
-
-
 
  public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_ID = "id";
@@ -59,12 +57,12 @@ import java.util.ArrayList;
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
-        public void addComand (Komanda kom){//TODO:можно брать из муапп исупдейт и тут все движения с добавлением и удалением делать
+        public void addComand (Command kom){//TODO:можно брать из муапп исупдейт и тут все движения с добавлением и удалением делать
             ContentValues cv = new ContentValues();
             // подготовим данные для вставки в виде пар: наименование столбца - значение
 
             //cv.put(KEY_COMID, kom.id);
-            cv.put(KEY_NOMER, kom.nomer_tel);
+            cv.put(KEY_NOMER, kom.phoneNumber);
             cv.put(KEY_NAME, kom.name);
             cv.put(KEY_TEXT, kom.text);
             cv.put(KEY_COLOR, kom.color);
@@ -74,17 +72,17 @@ import java.util.ArrayList;
             //dbs.close();
         }
 
-    public void addTimestamp (Komanda kom){
+    public void addTimestamp (Command kom){
         ContentValues cv = new ContentValues();
-        cv.put(KEY_DATE, kom.last_date);
+        cv.put(KEY_DATE, kom.lastDate);
         cv.put(KEY_NAME, kom.name);
         cv.put(KEY_COLOR, kom.color);
         long rowID = dbs.insert(DATABASE_TABLE_DATES, null, cv);
-        Log.d("My_Logs", "row inserted, ID = " + rowID + kom.last_date + kom.name);
+        Log.d("My_Logs", "row inserted, ID = " + rowID + kom.lastDate + kom.name);
     }
 
-    public Komanda getComand(int id){
-            Komanda komanda = new Komanda();
+    public Command getComand(int id){
+            Command komanda = new Command();
             String request = "SELECT * FROM " + DATABASE_TABLE +" WHERE " + KEY_ID + " LIKE '" + id + "'";
             //Cursor c = dbs.query(DATABASE_TABLE, new String[] {KEY_COMID, KEY_NOMER, KEY_NAME, KEY_TEXT, KEY_DATE}, id + "=?", new String[] {String.valueOf(id)}, null, null, null, null );
             Cursor c = dbs.rawQuery(request, null);
@@ -94,10 +92,10 @@ import java.util.ArrayList;
                     if (c.getString(1) != null){
                         //(Integer.parseInt(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), c.getString(4));
                         komanda.id = Integer.parseInt(c.getString(0));
-                        komanda.nomer_tel = c.getString(1);
+                        komanda.phoneNumber = c.getString(1);
                         komanda.name = c.getString(2);
                         komanda.text = c.getString(3);
-                        komanda.last_date = c.getString(4);
+                        komanda.lastDate = c.getString(4);
                         komanda.color = c.getString(5);
                     }
                 } catch (Exception e) {
@@ -113,13 +111,13 @@ import java.util.ArrayList;
         dbs.delete(DATABASE_TABLE, KEY_ID + "=" + id,null);
     }
 
-    public void updateComand (Komanda kom){
+    public void updateComand (Command kom){
 
         ContentValues cv = new ContentValues();
-        cv.put(KEY_NOMER, kom.nomer_tel);
+        cv.put(KEY_NOMER, kom.phoneNumber);
         cv.put(KEY_NAME, kom.name);
         cv.put(KEY_TEXT, kom.text);
-        cv.put(KEY_DATE, kom.last_date);
+        cv.put(KEY_DATE, kom.lastDate);
         cv.put(KEY_COLOR, kom.color);
         String where = KEY_ID + " = ?";
         String[] whereArgs = new String[] {String.valueOf(kom.id)};
@@ -128,17 +126,17 @@ import java.util.ArrayList;
         Log.d("MyLogs", updCount + " row updated");
     }
 
-    public ArrayList<Komanda> getallComands (){
-        ArrayList <Komanda> listofComands = new ArrayList<>();
+    public ArrayList<Command> getallComands (){
+        ArrayList <Command> listofComands = new ArrayList<>();
         Cursor c = dbs.query(DATABASE_TABLE, null, null, null, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            Komanda komanda = new Komanda();
+            Command komanda = new Command();
             komanda.id = Integer.parseInt(c.getString(0));
-            komanda.nomer_tel = c.getString(1);
+            komanda.phoneNumber = c.getString(1);
             komanda.name = c.getString(2);
             komanda.text = c.getString(3);
-            komanda.last_date = c.getString(4);
+            komanda.lastDate = c.getString(4);
             komanda.color = c.getString(5);
             listofComands.add(komanda);
             c.moveToNext();
@@ -146,14 +144,14 @@ import java.util.ArrayList;
         return listofComands;
     }
 
-    public ArrayList<Komanda> getallTimestamps (){
-        ArrayList <Komanda> listofTimestamps = new ArrayList<>();
+    public ArrayList<Command> getallTimestamps (){
+        ArrayList <Command> listofTimestamps = new ArrayList<>();
         Cursor c = dbs.query(DATABASE_TABLE_DATES, null, null, null, null, null, null);
         c.moveToLast();
         while (!c.isBeforeFirst()) {
-            Komanda timestamp = new Komanda();
+            Command timestamp = new Command();
             timestamp.id = Integer.parseInt(c.getString(0));
-            timestamp.last_date = c.getString(1);
+            timestamp.lastDate = c.getString(1);
             timestamp.name = c.getString(2);
             timestamp.color = c.getString(3);
             listofTimestamps.add(timestamp);

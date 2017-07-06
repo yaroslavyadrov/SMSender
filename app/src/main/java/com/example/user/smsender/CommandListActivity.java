@@ -1,5 +1,6 @@
 package com.example.user.smsender;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,8 +23,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.user.smsender.models.Komanda;
+import com.example.user.smsender.models.Command;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
@@ -33,23 +36,39 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.greenrobot.event.EventBus;
+import rx.functions.Action1;
 
 @EActivity
-public class ComandListActivity extends ActionBarActivity {
-    KomListAdapter komListAdapter;
+public class CommandListActivity extends ActionBarActivity {
+    CommandListAdapter komListAdapter;
     View footer;
     DialogFragment dialog;
-    Boolean onesend;
+    Boolean oneSend;
 
     @ViewById
     ListView kom_list;
 
+    @AfterViews
+    void init() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.SEND_SMS)
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean granted) {
+                        if (!granted) {
+                            finish();
+                        }
+                    }
+                });
+    }
+
     @ItemClick
-       void kom_listItemClicked (Komanda selectedKomanda) {
+    void kom_listItemClicked(Command selectedKomanda) {
         MyApp myApp = ((MyApp) getApplicationContext());
-        if (myApp.isclick){
-        myApp.currentpos = selectedKomanda.id;
-        showDialog(0);
+        if (myApp.isClick) {
+            myApp.currentPos = selectedKomanda.id;
+            showDialog(0);
         } else {
             Toast.makeText(getBaseContext(), "Дождитесь отправки сообщения",
                     Toast.LENGTH_SHORT).show();
@@ -57,23 +76,23 @@ public class ComandListActivity extends ActionBarActivity {
 
     }
 
-    public void onEvent (LogEvent event){
+    public void onEvent(LogEvent event) {
         MyApp myApp = ((MyApp) getApplicationContext());
         Date now = new Date();
         DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         String s = formatter.format(now);
-        Komanda kom;
-        kom = myApp.dbHelper.getComand(myApp.currentpos);
-        kom.last_date = s;
+        Command kom;
+        kom = myApp.dbHelper.getComand(myApp.currentPos);
+        kom.lastDate = s;
         myApp.dbHelper.updateComand(kom);
         myApp.dbHelper.addTimestamp(kom);
         Log.d("MyLogs", "now " + s);
-        myApp.isclick = true;
+        myApp.isClick = true;
         //kom_list.setClickable(true);
         EventBus.getDefault().post(new RefreshEvent());
     }
 
-    public void onEventAsync (SendEvent send){
+    public void onEventAsync(SendEvent send) {
         final MyApp myApp = ((MyApp) getApplicationContext());
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
@@ -85,37 +104,36 @@ public class ComandListActivity extends ActionBarActivity {
                 new Intent(DELIVERED), 0);
 
         //---when the SMS has been sent---
-        registerReceiver(new BroadcastReceiver(){
+        registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode())
-                {
+                switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        if (onesend) {
+                        if (oneSend) {
                             EventBus.getDefault().post(new LogEvent());
                             //updatecurtime();
-                            onesend = false;
+                            oneSend = false;
                         }
                         Toast.makeText(getBaseContext(), "SMS отправлено",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        myApp.isclick = true;
+                        myApp.isClick = true;
                         Toast.makeText(getBaseContext(), "Generic failure",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        myApp.isclick = true;
+                        myApp.isClick = true;
                         Toast.makeText(getBaseContext(), "No service",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
-                        myApp.isclick = true;
+                        myApp.isClick = true;
                         Toast.makeText(getBaseContext(), "Null PDU",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        myApp.isclick = true;
+                        myApp.isClick = true;
                         Toast.makeText(getBaseContext(), "Radio off",
                                 Toast.LENGTH_SHORT).show();
                         break;
@@ -124,11 +142,10 @@ public class ComandListActivity extends ActionBarActivity {
         }, new IntentFilter(SENT));
 
         //---when the SMS has been delivered---
-        registerReceiver(new BroadcastReceiver(){
+        registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode())
-                {
+                switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         Toast.makeText(getBaseContext(), "SMS доставлено",
                                 Toast.LENGTH_SHORT).show();
@@ -145,13 +162,13 @@ public class ComandListActivity extends ActionBarActivity {
         sms.sendTextMessage(send.phoneNumber, null, send.message, sentPI, deliveredPI);
     }
 
-    public void onEvent (RefreshEvent e){
-        komListAdapter = new KomListAdapter(this);
+    public void onEvent(RefreshEvent e) {
+        komListAdapter = new CommandListAdapter(this);
         MyApp myApp = ((MyApp) getApplicationContext());
-        if (kom_list.getFooterViewsCount() == 0){
+        if (kom_list.getFooterViewsCount() == 0) {
             kom_list.addFooterView(footer);
         }
-        if (myApp.dbHelper.getallComands() != null){
+        if (myApp.dbHelper.getallComands() != null) {
             kom_list.setAdapter(komListAdapter);
         } else {
             addContentView(footer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -171,16 +188,14 @@ public class ComandListActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 MyApp myApp = ((MyApp) getApplicationContext());
-                myApp.isupdate = false;
+                myApp.isUpdate = false;
                 createupdatedial();
             }
         });
-        //if (myApp.dbHelper.getallComands() == null){
-            EventBus.getDefault().post(new RefreshEvent());
-        //}
+        EventBus.getDefault().post(new RefreshEvent());
     }
 
-    void createupdatedial (){
+    void createupdatedial() {
         dialog = new com.example.user.smsender.Dialog();
         dialog.show(getFragmentManager(), "Dialog");
     }
@@ -203,7 +218,7 @@ public class ComandListActivity extends ActionBarActivity {
                         .setNeutralButton("Изменить",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        myApp.isupdate = true;
+                                        myApp.isUpdate = true;
                                         createupdatedial();
                                         dialog.cancel();
                                     }
@@ -242,15 +257,11 @@ public class ComandListActivity extends ActionBarActivity {
                         .setPositiveButton("Да",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        onesend = true;
-                                        myApp.isclick = false;
-                                        Komanda kom;
-                                        kom = myApp.dbHelper.getComand(myApp.currentpos);
-                                        //EventBus.getDefault().post(new ClickableEvent(false));
-                                        //kom_list.setClickable(false);
-                                        EventBus.getDefault().post(new SendEvent(kom.nomer_tel, kom.text));
-
-                                        //sendSMS(kom.nomer_tel, kom.text);
+                                        oneSend = true;
+                                        myApp.isClick = false;
+                                        Command kom;
+                                        kom = myApp.dbHelper.getComand(myApp.currentPos);
+                                        EventBus.getDefault().post(new SendEvent(kom.phoneNumber, kom.text));
                                         dialog.cancel();
                                     }
                                 })
@@ -266,17 +277,17 @@ public class ComandListActivity extends ActionBarActivity {
         }
     }
 
-    void showd(){
+    void showd() {
         showDialog(1);
     }
 
-    void otprdial(){
+    void otprdial() {
         showDialog(2);
     }
 
-    void delcomand(){
+    void delcomand() {
         MyApp myApp = ((MyApp) getApplicationContext());
-        myApp.dbHelper.delComand(myApp.currentpos);
+        myApp.dbHelper.delComand(myApp.currentPos);
     }
 
 

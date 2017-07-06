@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.user.smsender.models.Komanda;
+import com.example.user.smsender.models.Command;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class LogAdapter extends BaseAdapter {
     private Context ctx;
     private LayoutInflater lInflater;
-    public ArrayList<Komanda> objects;
+    public ArrayList<Command> objects;
     DBHelper dbHelper;
 
     LogAdapter(Context context){
@@ -40,9 +40,9 @@ public class LogAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        Komanda komanda;
-        komanda = objects.get(position);
-        return komanda.id;
+        Command command;
+        command = objects.get(position);
+        return command.id;
     }
 
     /*@Override
@@ -54,7 +54,7 @@ public class LogAdapter extends BaseAdapter {
 
         Komanda p = objects.get(position);
 
-        ((TextView) view.findViewById(R.id.datetv)).setText(p.last_date);
+        ((TextView) view.findViewById(R.id.datetv)).setText(p.lastDate);
 
         int col = Color.parseColor(p.color);
         ((TextView) view.findViewById(R.id.nametv)).setText(p.name);
@@ -78,7 +78,7 @@ public class LogAdapter extends BaseAdapter {
         holder.log_itm_back = (LinearLayout)convertView.findViewById(R.id.log_itm_back);
         convertView.setTag(holder);
 
-        holder.datetv.setText(objects.get(position).last_date);
+        holder.datetv.setText(objects.get(position).lastDate);
         holder.nametv.setText(objects.get(position).name);
         int col = Color.parseColor(objects.get(position).color);
         holder.log_itm_back.setBackgroundColor(col);

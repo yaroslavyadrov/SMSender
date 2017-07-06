@@ -2,7 +2,6 @@ package com.example.user.smsender;
 
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.example.user.smsender.models.Komanda;
+import com.example.user.smsender.models.Command;
 
 import de.greenrobot.event.EventBus;
 
 
 public class Dialog extends DialogFragment {
-    Komanda kom;
+    Command kom;
     String[] colornames = {"Красный", "Голубой", "Желтый", "Оранжевый", "Зеленый"};
     String[] colors = {"#EF5350","#00B0FF","#FFEB3B","#F57C00","#8BC34A"};
     String color;
@@ -33,17 +32,17 @@ public class Dialog extends DialogFragment {
         final EditText nameet = (EditText) v.findViewById(R.id.name_et);
         final EditText nomeret = (EditText) v.findViewById(R.id.nomer_et);
         final EditText textet = (EditText) v.findViewById(R.id.text_et);
-        if (myApp.isupdate){
+        if (myApp.isUpdate){
             getDialog().setTitle("Изменить команду");
-            nameet.setText(myApp.dbHelper.getComand(myApp.currentpos).name);
-            nomeret.setText(myApp.dbHelper.getComand(myApp.currentpos).nomer_tel);
-            textet.setText(myApp.dbHelper.getComand(myApp.currentpos).text);
+            nameet.setText(myApp.dbHelper.getComand(myApp.currentPos).name);
+            nomeret.setText(myApp.dbHelper.getComand(myApp.currentPos).phoneNumber);
+            textet.setText(myApp.dbHelper.getComand(myApp.currentPos).text);
         } else {
             getDialog().setTitle("Добавить команду");
         }
         // адаптер
         ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, colornames);
+        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, colornames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
@@ -70,14 +69,14 @@ public class Dialog extends DialogFragment {
         yesbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                kom = new Komanda();
-                kom.id = myApp.currentpos;
+                kom = new Command();
+                kom.id = myApp.currentPos;
                 kom.name = nameet.getText().toString();
                 kom.text = textet.getText().toString();
-                kom.nomer_tel = nomeret.getText().toString();
+                kom.phoneNumber = nomeret.getText().toString();
                 kom.color = color;
-                if (myApp.isupdate){
-                    kom.last_date = myApp.dbHelper.getComand(myApp.currentpos).last_date;
+                if (myApp.isUpdate){
+                    kom.lastDate = myApp.dbHelper.getComand(myApp.currentPos).lastDate;
                     myApp.dbHelper.updateComand(kom);
                 }else {
                     myApp.dbHelper.addComand(kom);
@@ -94,19 +93,6 @@ public class Dialog extends DialogFragment {
             }
         });
         return v;
-    }
-
-
-    public void onDismiss(DialogInterface dialog) {
-        //EventBus.getDefault().unregister(this);
-        super.onDismiss(dialog);
-        //Log.d(LOG_TAG, "Dialog 1: onDismiss");
-    }
-
-    public void onCancel(DialogInterface dialog) {
-        //EventBus.getDefault().unregister(this);
-        super.onCancel(dialog);
-        //Log.d(LOG_TAG, "Dialog 1: onCancel");
     }
 }
 

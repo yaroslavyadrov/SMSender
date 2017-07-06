@@ -9,18 +9,18 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.user.smsender.models.Komanda;
+import com.example.user.smsender.models.Command;
 
 import java.util.ArrayList;
 
 
-public class KomListAdapter extends BaseAdapter {
+public class CommandListAdapter extends BaseAdapter {
     private Context ctx;
     private LayoutInflater lInflater;
-    public ArrayList<Komanda> objects;
+    public ArrayList<Command> objects;
     DBHelper dbHelper;
 
-    KomListAdapter(Context context) {
+    CommandListAdapter(Context context) {
         ctx = context;
         dbHelper = new DBHelper(context);
         objects = dbHelper.getallComands();
@@ -41,34 +41,13 @@ public class KomListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        Komanda komanda;
+        Command komanda;
         komanda = objects.get(position);
         return komanda.id;
     }
 
-   /* @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
-        if (convertView == null) {
-            view = lInflater.inflate(R.layout.kom_list_item, parent, false);
-        }
-        else {
-            view = convertView;
-        }
-        Komanda p = objects.get(position);
-        if (p.last_date != null) {
-            ((TextView) view.findViewById(R.id.kom_lastuse_tv)).setText("Последний раз отсылалось: " + p.last_date);
-            //p.last_date = null;
-        }
-        int col = Color.parseColor(p.color);
-        ((TextView) view.findViewById(R.id.kom_name_tv)).setText(p.name);
-        view.findViewById(R.id.linlayBack).setBackgroundColor(col);
-        return view;
-    }
-}*/
    @Override
    public View getView(int position, View convertView, ViewGroup parent) {
-       //System.out.println("getView " + position + " " + convertView);
        ViewHolder holder;
        if (convertView == null) {
            holder = new ViewHolder();
@@ -83,8 +62,8 @@ public class KomListAdapter extends BaseAdapter {
        convertView.setTag(holder);
 
        holder.nametext.setText(objects.get(position).name);
-       if(objects.get(position).last_date != null) {
-        holder.lastusetext.setText("Последняя отправка:" + objects.get(position).last_date);
+       if(objects.get(position).lastDate != null) {
+        holder.lastusetext.setText("Последняя отправка:" + objects.get(position).lastDate);
        }
        int col = Color.parseColor(objects.get(position).color);
        holder.linlayback.setBackgroundColor(col);

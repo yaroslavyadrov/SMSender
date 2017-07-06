@@ -4,12 +4,14 @@ import android.app.Application;
 
 
 public class MyApp extends Application {
-    public int currentpos;
-    public boolean isupdate, isclick = true;
+    public int currentPos;
+    public boolean isUpdate, isClick = true;
     DBHelper dbHelper;
-    @Override
-    public void onCreate(){
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         dbHelper = new DBHelper(this);
     }
 }
